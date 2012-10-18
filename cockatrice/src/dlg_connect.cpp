@@ -32,6 +32,26 @@ DlgConnect::DlgConnect(QWidget *parent)
 	savePasswordCheckBox = new QCheckBox(tr("&Save password"));
 	savePasswordCheckBox->setChecked(settings.value("save_password", 1).toInt());
 
+	proxyLabel = new QLabel(tr("Http Proxy:"));
+	proxyEdit = new QLineEdit(settings.value("proxy").toString());
+	proxyLabel->setBuddy(proxyEdit);
+
+	proxyPortLabel = new QLabel(tr("Proxy Port:"));
+	proxyPortEdit = new QLineEdit(settings.value("proxy_port").toString());
+	proxyPortLabel->setBuddy(proxyPortEdit);
+
+	proxyUserLabel = new QLabel(tr("Proxy Username:"));
+	proxyUserEdit = new QLineEdit(settings.value("proxy_user").toString());
+	proxyUserLabel->setBuddy(proxyUserEdit);
+
+	proxyPasswordLabel = new QLabel(tr("Proxy Password:"));
+	proxyPasswordEdit = new QLineEdit(settings.value("proxy_password").toString());
+	proxyPasswordLabel->setBuddy(proxyPasswordEdit);
+	proxyPasswordEdit->setEchoMode(QLineEdit::Password);
+
+	saveProxySettingsCheckBox = new QCheckBox(tr("Save proxy settings"));
+	saveProxySettingsCheckBox->setChecked(settings.value("save_proxy", 1).toInt());
+
 	QGridLayout *grid = new QGridLayout;
 	grid->addWidget(hostLabel, 0, 0);
 	grid->addWidget(hostEdit, 0, 1);
@@ -42,6 +62,15 @@ DlgConnect::DlgConnect(QWidget *parent)
 	grid->addWidget(passwordLabel, 3, 0);
 	grid->addWidget(passwordEdit, 3, 1);
 	grid->addWidget(savePasswordCheckBox, 4, 0, 1, 2);
+	grid->addWidget(proxyLabel, 5, 0);
+	grid->addWidget(proxyEdit, 5, 1);
+	grid->addWidget(proxyPortLabel, 6, 0);
+	grid->addWidget(proxyPortEdit, 6, 1);
+	grid->addWidget(proxyUserLabel, 7, 0);
+	grid->addWidget(proxyUserEdit, 7, 1);
+	grid->addWidget(proxyPasswordLabel, 8, 0);
+	grid->addWidget(proxyPasswordEdit, 8, 1);
+	grid->addWidget(saveProxySettingsCheckBox, 9, 0, 1, 2);
 	
 	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 	connect(buttonBox, SIGNAL(accepted()), this, SLOT(actOk()));
@@ -66,6 +95,11 @@ void DlgConnect::actOk()
 	settings.setValue("playername", playernameEdit->text());
 	settings.setValue("password", savePasswordCheckBox->isChecked() ? passwordEdit->text() : QString());
 	settings.setValue("save_password", savePasswordCheckBox->isChecked() ? 1 : 0);
+	settings.setValue("proxy", saveProxySettingsCheckBox->isChecked() ? proxyEdit->text() : QString());
+	settings.setValue("proxy_port", saveProxySettingsCheckBox->isChecked() ? proxyPortEdit->text() : QString());
+	settings.setValue("proxy_user", saveProxySettingsCheckBox->isChecked() ? proxyUserEdit->text() : QString());
+	settings.setValue("proxy_password", saveProxySettingsCheckBox->isChecked() ? proxyPasswordEdit->text() : QString());
+	settings.setValue("save_proxy", saveProxySettingsCheckBox->isChecked() ? 1 : 0);
 	settings.endGroup();
 
 	accept();

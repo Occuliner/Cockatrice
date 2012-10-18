@@ -15,7 +15,7 @@ signals:
 	void socketError(const QString &errorString);
 	void protocolVersionMismatch(int clientVersion, int serverVersion);
 	void protocolError();
-	void sigConnectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password);
+	void sigConnectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password, const QString &proxy, const QString &proxyUser, const QString &proxyPassword, unsigned int proxyPort);
 	void sigDisconnectFromServer();
 private slots:
 	void slotConnected();
@@ -25,7 +25,7 @@ private slots:
 	void processServerIdentificationEvent(const Event_ServerIdentification &event);
 	void processConnectionClosedEvent(const Event_ConnectionClosed &event);
 	void loginResponse(const Response &response);
-	void doConnectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password);
+	void doConnectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password, const QString &proxy, const QString &proxyUser, const QString &proxyPassword, unsigned int proxyPort);
 	void doDisconnectFromServer();
 private:
 	static const int maxTimeout = 10;
@@ -44,7 +44,7 @@ public:
 	RemoteClient(QObject *parent = 0);
 	~RemoteClient();
 	QString peerName() const { return socket->peerName(); }
-	void connectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password);
+	void connectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password, const QString &proxy, const QString &proxyUser, const QString &proxyPassword, unsigned int proxyPort);
 	void disconnectFromServer();
 };
 

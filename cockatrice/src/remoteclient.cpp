@@ -1,5 +1,6 @@
 #include <QTimer>
 #include <QThread>
+#include <QNetworkProxy>
 #include "remoteclient.h"
 
 #include "pending_command.h"
@@ -26,7 +27,7 @@ RemoteClient::RemoteClient(QObject *parent)
 	
 	connect(this, SIGNAL(serverIdentificationEventReceived(const Event_ServerIdentification &)), this, SLOT(processServerIdentificationEvent(const Event_ServerIdentification &)));
 	connect(this, SIGNAL(connectionClosedEventReceived(Event_ConnectionClosed)), this, SLOT(processConnectionClosedEvent(Event_ConnectionClosed)));
-	connect(this, SIGNAL(sigConnectToServer(QString, unsigned int, QString, QString)), this, SLOT(doConnectToServer(QString, unsigned int, QString, QString)));
+	connect(this, SIGNAL(sigConnectToServer(QString, unsigned int, QString, QString, QString, QString, QString, unsigned int)), this, SLOT(doConnectToServer(QString, unsigned int, QString, QString, QString, QString, QString, unsigned int)));
 	connect(this, SIGNAL(sigDisconnectFromServer()), this, SLOT(doDisconnectFromServer()));
 }
 
@@ -165,12 +166,27 @@ void RemoteClient::sendCommandContainer(const CommandContainer &cont)
 	socket->write(buf);
 }
 
-void RemoteClient::doConnectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password)
+void RemoteClient::doConnectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password, const QString &proxy, const QString &proxyUser, const QString &proxyPassword, unsigned int proxyPort)
 {
 	doDisconnectFromServer();
 	
 	userName = _userName;
 	password = _password;
+
+	if (proxy.isEmpty()){
+		socket->setProxy(QNetworkProxy::NoProxy);
+	} else {
+		QNetworkProxy proxyObj;
+		proxyObj.setType(QNetworkProxy::HttpProxy);
+		proxyObj.setHostName(proxy);
+		proxyObj.setPort(proxyPort);
+		if (!proxyUser.isEmpty()){
+			proxyObj.setUser(proxyUser);
+			proxyObj.setPassword(proxyPassword);
+		}
+		socket->setProxy(proxyObj);
+	}
+
 	socket->connectToHost(hostname, port);
 	setStatus(StatusConnecting);
 }
@@ -220,9 +236,9 @@ void RemoteClient::ping()
 	}
 }
 
-void RemoteClient::connectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password)
+void RemoteClient::connectToServer(const QString &hostname, unsigned int port, const QString &_userName, const QString &_password, const QString &proxy, const QString &proxyUser, const QString &proxyPassword, unsigned int proxyPort)
 {
-	emit sigConnectToServer(hostname, port, _userName, _password);
+	emit sigConnectToServer(hostname, port, _userName, _password, proxy, proxyUser, proxyPassword, proxyPort);
 }
 
 void RemoteClient::disconnectFromServer()

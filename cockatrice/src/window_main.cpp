@@ -121,7 +121,7 @@ void MainWindow::actConnect()
 {
 	DlgConnect dlg(this);
 	if (dlg.exec())
-		client->connectToServer(dlg.getHost(), dlg.getPort(), dlg.getPlayerName(), dlg.getPassword());
+		client->connectToServer(dlg.getHost(), dlg.getPort(), dlg.getPlayerName(), dlg.getPassword(), dlg.getProxy(), dlg.getProxyUser(), dlg.getProxyPassword(), dlg.getProxyPort());
 }
 
 void MainWindow::actDisconnect()

@@ -16,12 +16,16 @@ public:
 	int getPort() const { return portEdit->text().toInt(); }
 	QString getPlayerName() const { return playernameEdit->text(); }
 	QString getPassword() const { return passwordEdit->text(); }
+	QString getProxy() const { return proxyEdit->text(); }
+	int getProxyPort() const { return proxyPortEdit->text().toInt(); }
+	QString getProxyUser() const { return proxyUserEdit->text(); }
+	QString getProxyPassword() const { return proxyPasswordEdit->text(); }
 private slots:
 	void actOk();
 private:
-	QLabel *hostLabel, *portLabel, *playernameLabel, *passwordLabel;
-	QLineEdit *hostEdit, *portEdit, *playernameEdit, *passwordEdit;
-	QCheckBox *savePasswordCheckBox;
+	QLabel *hostLabel, *portLabel, *playernameLabel, *passwordLabel, *proxyLabel, *proxyPortLabel, *proxyUserLabel, *proxyPasswordLabel;
+	QLineEdit *hostEdit, *portEdit, *playernameEdit, *passwordEdit, *proxyEdit, *proxyPortEdit, *proxyUserEdit, *proxyPasswordEdit;
+	QCheckBox *savePasswordCheckBox, *saveProxySettingsCheckBox;
 };
 
 #endif
